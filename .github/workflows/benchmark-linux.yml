@@ -1,0 +1,33 @@
+name: "Build for Linux"
+
+on:
+    push:
+    pull_request:
+jobs:
+    bench-ubuntu:
+        name: Ubuntu benchmark
+
+        permissions:
+            actions: read
+            contents: read
+            security-events: write
+
+        strategy:
+            fail-fast: false
+            matrix:
+                os: [ubuntu-latest]
+        runs-on: ${{ matrix.os }}
+
+        steps:
+            - name: "Checkout"
+              uses: actions/checkout@v3
+
+            - name: "Download & Extract Geekbench5"
+              run: |
+                curl -RL https://cdn.geekbench.com/Geekbench-5.4.5-Linux.tar.gz -o geekbench5.tar.gz
+                tar xvf geekbench5.tar.gz
+            
+            - name: "Run Geekbench5"
+              run: |
+                cd Geekbench-5.4.5-Linux
+                ./geekbench5
